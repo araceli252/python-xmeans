@@ -68,7 +68,8 @@ class xmeans:
         else:
             centroids = np.asarray(centroids)
         result = KMeans(k, init=centroids).fit(data)
-        return  result
+        labels = result.labels_
+        return  result,labels
 
     @classmethod
     def bic(cls, clusters, centroids):
