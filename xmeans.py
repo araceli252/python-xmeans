@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from sklearn.cluster import KMeans
-from sklearn.metrics.pairwise import euclidean_distances
+#from sklearn.metrics.pairwise import euclidean_distances
+
+from scipy.spatial import distance
+from numpy.linalg import inv
 import numpy as np
 
 class xmeans:
@@ -12,6 +15,10 @@ class xmeans:
     def fit(self, data):
 
         cluster_centers = []
+        
+        covar = np.cov(data)
+        inv_covar = inv(covar)
+        
         k = self.kmin
         cnt = 0
         while k <= self.kmax:
@@ -20,7 +27,8 @@ class xmeans:
 
             centroids = kmeans.cluster_centers_
 
-            centroid_distances = euclidean_distances(centroids) # 计算聚类中心的距离
+            #centroid_distances = euclidean_distances(centroids) # 计算聚类中心的距离
+            centroid_distances = distance.mahalanobis(centroids, inv_covar)
             centroid_distances += np.diag([np.Infinity] * k) #
             min_centroid_distances = centroid_distances.min(axis = -1) # 聚类中心到最近的聚类中心的距离
 
