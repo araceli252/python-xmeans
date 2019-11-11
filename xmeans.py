@@ -16,7 +16,7 @@ class xmeans:
         cnt = 0
         while k <= self.kmax:
             cnt += 1
-            kmeans = self._fit(k, data, cluster_centers)
+            kmeans = self._fit(k, data, cluster_centers,kmax)
 
             centroids = kmeans.cluster_centers_
 
@@ -40,7 +40,7 @@ class xmeans:
 
 
 
-                new_kmeans = self._fit(2, points, np.asarray([new_point1, new_point2]))
+                new_kmeans = self._fit(2, points, np.asarray([new_point1, new_point2]),kmax)
                 new_labels = new_kmeans.labels_
                 cluster1 = points[new_labels == 0]
                 cluster2 = points[new_labels == 1]
@@ -57,17 +57,17 @@ class xmeans:
                 break # 聚类数不变
             k = len(cluster_centers)
         print('count of iteration: {}'.format(k))
-        return self._fit(k, data, cluster_centers)
+        return self._fit(k, data, cluster_centers,kmax)
 
 
 
 
-    def _fit(self, k, data, centroids):
+    def _fit(self, k, data, centroids,kmax):
         if len(centroids) == 0:
             centroids = self.init
         else:
             centroids = np.asarray(centroids)
-        result = KMeans(k, init=centroids).fit(data)
+        result = KMeans(k, init=centroids, random_state=kmax).fit(data)
         return  result
 
     @classmethod
